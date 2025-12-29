@@ -1,6 +1,6 @@
 # 🎵 ESP32 NFC Audio Player + Stepper Motor (Vinyl Simulator)
 
-Complete ESP32 project that simulates a vinyl turntable using NFC tags.
+Complete ESP32 project which simulates a vinyl player using NFC tags.
 Each NFC tag (UID) is mapped to a folder on the SD card containing WAV files.
 When a valid tag is detected, audio starts playing via Bluetooth and the
 stepper motor rotates continuously at **33 RPM**, like a real record player.
@@ -158,6 +158,8 @@ PCM
 Stereo
 
 Other formats will not play correctly.
+
+🖨️ .STL files to be prrinted on a 3D printer
 
 🚀 Build & Flash (ESP-IDF)
 idf.py set-target esp32
