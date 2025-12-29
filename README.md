@@ -132,7 +132,7 @@ Each folder corresponds to one NFC UID.
 UID 04 A2 B1 C9 32 → /album_01
 UID 93 7F 22 11 A0 → /album_02
 UID A1 B2 C3 D4 E5 → /album_03
-
+```
 
 ⚙️ Stepper Motor Control (33 RPM)
 
