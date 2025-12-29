@@ -16,7 +16,7 @@
 #include "esp_a2dp_api.h"
 #include "esp_avrc_api.h"
 #include "esp_err.h"
-#include "pn532.h"       // teu driver PN532
+#include "pn532.h"      
 #include "pn532_i2c.h"
 
 #define TAG "APP_MAIN"
@@ -193,12 +193,12 @@ void app_main(void){
     while(1){
         esp_err_t er=pn532_read_uid_once();
         if(er==ESP_OK){
-            // copia UID para global
+            
             memcpy(last_uid,pn532_get_last_uid(),pn532_get_last_uid_len());
             last_uid_len=pn532_get_last_uid_len();
 
             char path[64]={0};
-            // SWITCH/CASE por UID completo
+            
             if(last_uid_len==4){
                 if(memcmp(last_uid,(uint8_t[]){0xDE,0xAD,0xBE,0xEF},4)==0) strcpy(path,"/sdcard/1/music1.wav");
                 else if(memcmp(last_uid,(uint8_t[]){0xAA,0xBB,0xCC,0xDD},4)==0) strcpy(path,"/sdcard/2/music2.wav");
@@ -210,16 +210,17 @@ void app_main(void){
 
             if(!wav_open(path)){ESP_LOGE(TAG,"Falha abrir WAV");continue;}
 
-            // Ligar motor
+            
             xTaskCreatePinnedToCore(motor_task,"motor",2048,NULL,5,NULL,APP_CPU_NUM);
 
-            // BT connect
+            
             ESP_ERROR_CHECK(esp_a2d_source_connect(BT_REMOTE_ADDR));
 
             while(data_bytes_left>0) vTaskDelay(pdMS_TO_TICKS(200));
             ESP_LOGI(TAG,"Fim audio");
-            break; // só toca uma vez por tag
+            break; 
         }
         vTaskDelay(pdMS_TO_TICKS(200));
     }
 }
+
