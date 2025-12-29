@@ -57,15 +57,15 @@ Stepper Motor Bluetooth A2DP
 
 | Component | Description |
 |---------|------------|
-| ESP32 | ESP32 Dev Module |
+| ESP32 | ESP WROOM 32 Module |
 | NFC | PN532 (I2C mode) |
 | Motor | 28BYJ-48 Stepper |
 | Driver | ULN2003 |
 | Storage | microSD card (SPI) |
-| Audio | Bluetooth speaker |
 | Power | USB or Li-Po + TP4056 + Boost |
+| Audio | Any Bluetooth speaker |
 
----
+
 
 ## 🔌 Wiring
 
@@ -147,7 +147,7 @@ Faster: decrease MOTOR_STEP_DELAY_US
 
 Smoother: keep delay ≥ 150 µs
 
-Target speed: ≈33 RPM
+Target speed: ≈33 RPM (Vinyl spped)
 
 🎧 Audio Requirements
 
