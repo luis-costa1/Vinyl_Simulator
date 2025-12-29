@@ -1,186 +1,172 @@
-# Vinyl_Simulator
-ESP32 Bluetooth Audio Player + NFC Reader + Motor (Vinyl Simulator)
+# 🎵 ESP32 NFC Audio Player + Stepper Motor (Vinyl Simulator)
 
-Complete ESP32 project that combines:
+Complete ESP32 project that simulates a vinyl turntable using NFC tags.
+Each NFC tag (UID) is mapped to a folder on the SD card containing WAV files.
+When a valid tag is detected, audio starts playing via Bluetooth and the
+stepper motor rotates continuously at **33 RPM**, like a real record player.
 
-📀 Bluetooth audio playback (A2DP)
+---
 
-💾 WAV file reading from SD card
+## 📦 Features
 
-🏷️ NFC tag reading (PN532 via I2C)
+- 🎶 Bluetooth A2DP audio streaming
+- 💾 WAV playback from SD card (PCM 44.1 kHz, 16-bit, stereo)
+- 🏷️ NFC control using PN532 (I2C)
+- 🔄 Stepper motor running at constant 33 RPM
+- ⚙️ Motor runs in a dedicated FreeRTOS task (non-blocking)
+- 🔋 Ready for battery power (Li-Po + boost)
+- 🧠 Clean architecture, GitHub / Gerrit ready
 
-⚙️ Continuous stepper motor control (turntable / vinyl style)
+---
 
-This repository is designed to be cloned and built directly.
+## 🧠 System Architecture
 
-📦 Hardware Used
-
-ESP32 Dev Module
-
-Stepper motor driver (ULN2003 or equivalent)
-
-28BYJ‑48 stepper motor (or similar)
-
-PN532 NFC module (I2C mode)
-
-SD Card module (SPI)
-
-Bluetooth speaker
-
-USB power supply or Li‑ion battery + boost module
-
-🔌 Wiring
-🏷️ PN532 (I2C)
-PN532	ESP32
-SDA	GPIO 21
-SCL	GPIO 22
-VCC	3.3V
-GND	GND
-
-⚠️ Do NOT use 5V on I2C
-
-💾 SD Card (SPI)
-SD	ESP32
-CS	GPIO 5
-MOSI	GPIO 23
-MISO	GPIO 19
-SCK	GPIO 18
-VCC	3.3V
-GND	GND
-⚙️ Stepper Motor
-Driver	ESP32
-IN1	GPIO 25
-IN2	GPIO 26
-IN3	GPIO 27
-IN4	GPIO 14
-📁 Project Structure
-esp32-nfc-audio-motor/
+NFC Tag
 │
-├── main/
-│   ├── main.cpp
-│   ├── motor.cpp
-│   ├── motor.h
-│   ├── nfc.cpp
-│   ├── nfc.h
-│   ├── audio.cpp
-│   └── audio.h
+▼
+PN532 (I2C)
 │
-├── CMakeLists.txt
-├── sdkconfig.defaults
-└── README.md
-⚙️ Motor – Continuous Operation
-
-The motor spins continuously like a turntable using AccelStepper logic.
-
-motor.setMaxSpeed(1000);
-motor.setSpeed(500);
-motor.runSpeed();
-
-Speed can be adjusted without affecting Bluetooth or NFC.
-
-🏷️ NFC Logic
-
-Each NFC tag UID is mapped to a specific folder on the SD card.
-
-Runtime behavior:
-
-The PN532 continuously scans for NFC tags while the system is idle
-
-When a tag is detected, its UID is read and matched against a UID table
-
-Each valid UID corresponds to one folder containing WAV files
-
-NFC scanning is paused once audio playback starts to avoid RF/timing interference
-
-Example mapping logic:
-
-UID 04:A1:BC:92 → /sdcard/album_rock/
-
-UID 93:7F:21:0A → /sdcard/album_jazz/
-
-⚙️ Motor Synchronization (33 RPM)
-
-The stepper motor simulates a vinyl turntable.
-
-The motor starts at the exact moment audio playback begins
-
-Speed is calibrated to 33 RPM
-
-Motor runs continuously while audio is playing
-
-Motor stops immediately when audio playback ends
-
-Motor control runs in its own task so it does not block:
-
-Bluetooth audio
-
-SD card reads
-
-System responsiveness
-
-🔄 System Flow Diagram
-flowchart TD
-    A[ESP32 Boot] --> B[Initialize SD Card]
-    B --> C[Initialize Bluetooth A2DP]
-    C --> D[Initialize NFC PN532]
-    D --> E[Idle State / Waiting for NFC Tag]
+▼
+ESP32 ── UID lookup ──► SD Card Folder
+│ │
+│ ▼
+│ WAV Files
+│ │
+▼ ▼
+Stepper Motor Bluetooth A2DP
+(33 RPM) Audio Speaker
 
 
-    E -->|NFC Tag Detected| F[Read NFC UID]
-    F --> G{UID Recognized?}
 
 
-    G -->|No| E
-    G -->|Yes| H[Map UID to SD Folder]
+---
+
+## 🔁 System Flow (Logic)
+
+1. ESP32 boots
+2. NFC reader waits for a tag
+3. NFC UID is read
+4. UID is matched to a folder on the SD card
+5. WAV file(s) from that folder start playing via Bluetooth
+6. Stepper motor starts rotating at **33 RPM**
+7. Removing the NFC tag stops playback and the motor
+
+---
+
+## 🧩 Hardware Used
+
+| Component | Description |
+|---------|------------|
+| ESP32 | ESP32 Dev Module |
+| NFC | PN532 (I2C mode) |
+| Motor | 28BYJ-48 Stepper |
+| Driver | ULN2003 |
+| Storage | microSD card (SPI) |
+| Audio | Bluetooth speaker |
+| Power | USB or Li-Po + TP4056 + Boost |
+
+---
+
+## 🔌 Wiring
+
+### 🏷️ PN532 NFC (I2C)
+
+| PN532 | ESP32 |
+|------|------|
+| SDA | GPIO 21 |
+| SCL | GPIO 22 |
+| VCC | 3.3V |
+| GND | GND |
+
+⚠️ **Never use 5V on PN532 I2C lines**
+
+---
+
+### 💾 SD Card (SPI – VSPI)
+
+| SD Card | ESP32 |
+|--------|------|
+| CS | GPIO 5 |
+| MOSI | GPIO 23 |
+| MISO | GPIO 19 |
+| SCK | GPIO 18 |
+| VCC | 3.3V |
+| GND | GND |
+
+---
+
+### ⚙️ Stepper Motor (ULN2003)
+
+| ULN2003 | ESP32 |
+|--------|------|
+| IN1 | GPIO 25 |
+| IN2 | GPIO 26 |
+| IN3 | GPIO 27 |
+| IN4 | GPIO 14 |
+| VCC | 5V |
+| GND | GND |
+
+---
+
+## 📁 SD Card Structure
+
+/sdcard
+├── /album_01
+│ ├── track01.wav
+│ └── track02.wav
+│
+├── /album_02
+│ ├── song.wav
+│
+└── /album_03
+└── audio.wav
 
 
-    H --> I[Load WAV File]
-    I --> J[Start Bluetooth Audio Streaming]
+Each folder corresponds to one NFC UID.
+
+---
+
+## 🏷️ NFC UID Mapping (Example)
+
+```cpp
+UID 04 A2 B1 C9 32 → /album_01
+UID 93 7F 22 11 A0 → /album_02
+UID A1 B2 C3 D4 E5 → /album_03
 
 
-    J --> K[Start Motor Task]
-    K --> L[Stepper Motor Spins at 33 RPM]
+⚙️ Stepper Motor Control (33 RPM)
 
+The motor runs in its own FreeRTOS task so Bluetooth audio is never blocked.
 
-    L --> M{Audio Finished?}
-    M -->|No| L
-    M -->|Yes| N[Stop Motor]
-    N --> E
-🔊 Bluetooth Audio
+#define MOTOR_STEP_DELAY_US 200
+#define MOTOR_STEPS_PER_DELAY 8
 
-16‑bit PCM WAV files
+Speed tuning
 
-Bluetooth A2DP streaming
+Faster: decrease MOTOR_STEP_DELAY_US
 
-Logging disabled to avoid audio glitches
+Smoother: keep delay ≥ 150 µs
 
-🔋 Power
+Target speed: ≈33 RPM
 
-ESP32 powered via USB or
+🎧 Audio Requirements
 
-Li‑ion battery + 5V step‑up converter
+WAV format must be:
+PCM
+44.1 kHz
+16-bit
+Stereo
 
-⚠️ Stepper motor should preferably use a separate power supply.
+Other formats will not play correctly.
 
-🚀 Build & Flash
+🚀 Build & Flash (ESP-IDF)
+idf.py set-target esp32
 idf.py build
 idf.py flash monitor
-✅ Project Status
-
-✔ Stable motor control ✔ NFC working reliably ✔ Clean Bluetooth audio ✔ SD card without dropouts
-
-🧠 Important Notes
-
-Avoid boot‑critical GPIOs
-
-PN532 must always run at 3.3V
-
-SD card and NFC use separate buses
 
 📜 License
 
-MIT
 
 ✨ Author
-
-Project developed for interactive physical control using ESP32.
+Me
+NFC-controlled vinyl-style audio player
