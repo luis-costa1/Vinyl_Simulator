@@ -14,28 +14,7 @@ stepper motor rotates continuously at **33 RPM**, like a real record player.
 - 🏷️ NFC control using PN532 (I2C)
 - 🔄 Stepper motor running at constant 33 RPM
 - ⚙️ Motor runs in a dedicated FreeRTOS task (non-blocking)
-- 🔋 Ready for battery power (Li-Po + boost)
-- 🧠 Clean architecture, GitHub / Gerrit ready
-
----
-
-## 🧠 System Architecture
-
-NFC Tag
-│
-▼
-PN532 (I2C)
-│
-▼
-ESP32 ── UID lookup ──► SD Card Folder
-│ │
-│ ▼
-│ WAV Files
-│ │
-▼ ▼
-Stepper Motor Bluetooth A2DP
-(33 RPM) Audio Speaker
-
+- 🔋 Powered via USB or battery power (Li-Po + boost)
 
 
 
@@ -78,7 +57,6 @@ Stepper Motor Bluetooth A2DP
 | VCC | 3.3V |
 | GND | GND |
 
-⚠️ **Never use 5V on PN532 I2C lines**
 
 ---
 
