@@ -134,7 +134,7 @@ UID 93 7F 22 11 A0 → /album_02
 UID A1 B2 C3 D4 E5 → /album_03
 ```
 
-⚙️ Stepper Motor Control (33 RPM)
+## ⚙️ Stepper Motor Control (33 RPM)
 
 The motor runs in its own FreeRTOS task so Bluetooth audio is never blocked.
 
@@ -150,7 +150,7 @@ Smoother: keep delay ≥ 150 µs
 Target speed: ≈33 RPM (Vinyl spped)
 
 
-🎧 Audio Requirements
+## 🎧 Audio Requirements
 
 WAV format must be:
 PCM
@@ -162,21 +162,21 @@ Other formats will not play correctly.
 
 
 
-🖨️ .STL files to be prrinted on a 3D printer
+## 🖨️ .STL files to be prrinted on a 3D printer
 
 
 
-🚀 Build & Flash (ESP-IDF)
+## 🚀 Build & Flash (ESP-IDF)
 idf.py set-target esp32
 idf.py build
 idf.py flash monitor
 
 
 
-📜 License
+## 📜 License
 
 
 
-✨ Author
+## ✨ Author
 Me
 NFC-controlled vinyl-style audio player
