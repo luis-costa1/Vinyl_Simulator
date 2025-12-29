@@ -149,6 +149,7 @@ Smoother: keep delay ≥ 150 µs
 
 Target speed: ≈33 RPM (Vinyl spped)
 
+
 🎧 Audio Requirements
 
 WAV format must be:
@@ -159,14 +160,21 @@ Stereo
 
 Other formats will not play correctly.
 
+
+
 🖨️ .STL files to be prrinted on a 3D printer
+
+
 
 🚀 Build & Flash (ESP-IDF)
 idf.py set-target esp32
 idf.py build
 idf.py flash monitor
 
+
+
 📜 License
+
 
 
 ✨ Author
